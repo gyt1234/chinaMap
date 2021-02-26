@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>建党百年</title>
+    <style>
+        p{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            margin: 0;
+            padding: 0;
+            background: #eaedf1;
+            font-family: 微软雅黑;
+            font-size: 13px;
+        }
+        .footer{
+            border-top: 1px solid #cccccc;
+            color: rgba(0,0,0,.5);
+            padding-top: 10px;
+            text-align: center;
+        }
+        .operation{
+            margin: 0 15px 10px;
+            padding: 10px 0 20px;
+        }
+        button{
+            color: #000000;
+            border: none;
+            cursor: pointer;
+            height: 30px;
+            outline: none;
+        }
+        .active{
+            color: #ffffff;
+            background: rgba(205,1,4,1);
+        }
+        .content{
+            margin: 0 20px 30px;
+            line-height: 180%;
+            padding-bottom: 20px;
+        }
+        .video{
+            text-align: center;
+        }
+        .noDone{
+            height: 550px;
+            text-align: center;
+            font-size: 20px;
+            line-height: 550px;
+        }
+        .article-zone{
+            margin: 0 20px 10px;
+            padding-top: 20px;
+        }
+        .title-zone{
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .content-zone{
+            line-height: 180%;
+        }
+        .container{
+            background: #ffffff;
+            margin: 0 auto 10px;
+            width: 80%;
+        }
+        .comment{
+            padding: 0 15px 20px;
+            margin: 20px 0 0;
+            text-align: right;
+        }
+        textarea{
+            width: 98%;
+            height: 50px;
+        }
+        .submit{
+            text-align: right;
+            border: 1px solid #cccccc;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <router-view></router-view>
+    <div class="footer">
+        东南大学土木工程学院2019级丁大钧班出品
+    </div>
+</div>
+
+<script src="./js/echarts.min.js"></script>
+<script src="./map/china.js"></script>
+<script src="./map/province/shanghai.js"></script>
+<script src="./map/province/hebei.js"></script>
+<script src="./map/province/shanxi.js"></script>
+<script src="./map/province/neimenggu.js"></script>
+<script src="./map/province/liaoning.js"></script>
+<script src="./map/province/jilin.js"></script>
+<script src="./map/province/heilongjiang.js"></script>
+<script src="./map/province/jiangsu.js"></script>
+<script src="./map/province/zhejiang.js"></script>
+<script src="./map/province/anhui.js"></script>
+<script src="./map/province/fujian.js"></script>
+<script src="./map/province/jiangxi.js"></script>
+<script src="./map/province/shandong.js"></script>
+<script src="./map/province/henan.js"></script>
+<script src="./map/province/hubei.js"></script>
+<script src="./map/province/hunan.js"></script>
+<script src="./map/province/guangdong.js"></script>
+<script src="./map/province/guangxi.js"></script>
+<script src="./map/province/hainan.js"></script>
+<script src="./map/province/sichuan.js"></script>
+<script src="./map/province/guizhou.js"></script>
+<script src="./map/province/yunnan.js"></script>
+<script src="./map/province/xizang.js"></script>
+<script src="./map/province/shanxi1.js"></script>
+<script src="./map/province/qinghai.js"></script>
+<script src="./map/province/ningxia.js"></script>
+<script src="./map/province/xinjiang.js"></script>
+<script src="./map/province/beijing.js"></script>
+<script src="./map/province/tianjin.js"></script>
+<script src="./map/province/chongqing.js"></script>
+<script src="./map/province/xianggang.js"></script>
+<script src="./map/province/aomen.js"></script>
+<script src="./map/province/taiwan.js"></script>
+<script src="./js/vue.js"></script>
+<script src="./js/vue-router.js"></script>
+<script type="module">
+    let province = {
+        template: '<div id="map1" style="height: 550px"></div>',
+        data() {
+            return {}
+        },
+        mounted() {
+            const name = this.$route.params.name;
+            let cityText = this.getSH(name);
+            let myChart1 = echarts.init(document.getElementById('map1'));
+            let option1 = {
+                title: {
+                    text: `中华百载日新图`,
+                    x:'center',
+                    top: '20'
+                },
+                tooltip : {
+                    trigger: 'item',
+                    formatter: '{b}',
+                    backgroundColor: 'rgba(255,255,255,0.5)',
+                    borderColor: '#000000',
+                    textStyle: {
+                        color: '#000000'
+                    }
+                },
+                series: [{
+                    type: 'map',
+                    mapType: `${name}`,
+                    itemStyle: {
+                        areaColor: 'rgba(205,1,4,1)',
+                        borderColor: 'rgba(239,162,74,1)'
+                    },
+                    emphasis: {
+                        itemStyle: {
+                        },
+                        label: {
+                            color: '#000000'
+                        }
+                    },
+                    label: {
+                        show: true,  //展示名称
+                        textStyle: {
+                            color: '#ffffff'
+                        }
+                    }
+                }]
+            };
+            myChart1.on('click', (event) => {
+                if(event.name.includes(cityText)){
+                    router.push({ name: 'city', params: { name: `${cityText}` }})
+                }
+            });
+            myChart1.setOption(option1);
+        },
+        methods: {
+            // 获取省会名称
+            getSH(provinceName) {
+                let city;
+                let cityText;
+                switch(provinceName){
+                    case '甘肃':
+                        city = 'lanzhou';
+                        cityText = '兰州';
+                            break;
+                    case '青海':
+                        city = 'xining';
+                        cityText = '西宁';
+                        break;
+                    case '陕西':
+                        city = 'xian';
+                        cityText = '西安';
+                        break;
+                    case '河南':
+                        city = 'zhengzhou';
+                        cityText = '郑州';
+                        break;
+                    case '山东':
+                        city = 'jinan';
+                        cityText = '济南';
+                        break;
+                    case '山西':
+                        city = 'taiyuan';
+                        cityText = '太原';
+                        break;
+                    case '安徽':
+                        city = 'hefei';
+                        cityText = '合肥';
+                        break;
+                    case '湖南':
+                        city = 'changsha';
+                        cityText = '长沙';
+                        break;
+                    case '湖北':
+                        city = 'wuhan';
+                        cityText = '武汉';
+                        break;
+                    case '江苏':
+                        city = 'nanjing';
+                        cityText = '南京';
+                        break;
+                    case '四川':
+                        city = 'chengdu';
+                        cityText = '成都';
+                        break;
+                    case '贵州':
+                        city = 'guiyang';
+                        cityText = '贵阳';
+                        break;
+                    case '云南':
+                        city = 'kunming';
+                        cityText = '昆明';
+                        break;
+                    case '黑龙江':
+                        city = 'haerbin';
+                        cityText = '哈尔滨';
+                        break;
+                    case '吉林':
+                        city = 'changchun';
+                        cityText = '长春';
+                        break;
+                    case '辽宁':
+                        city = 'shenyang';
+                        cityText = '沈阳';
+                        break;
+                    case '河北':
+                        city = 'shijiazhuang';
+                        cityText = '石家庄';
+                        break;
+                    case '浙江':
+                        city = 'hangzhou';
+                        cityText = '杭州';
+                        break;
+                    case '江西':
+                        city = 'nanchang';
+                        cityText = '南昌';
+                        break;
+                    case '广东':
+                        city = 'guangzhou';
+                        cityText = '广州';
+                        break;
+                    case '福建':
+                        city = 'fuzhou';
+                        cityText = '福州';
+                        break;
+                    case '台湾':
+                        city = 'taibei';
+                        cityText = '台北';
+                        break;
+                    case '海南':
+                        city = 'haikou';
+                        cityText = '海口';
+                        break;
+                    case '广西':
+                        city = 'nanning';
+                        cityText = '南宁';
+                        break;
+                    case '西藏':
+                        city = 'lasa';
+                        cityText = '拉萨';
+                        break;
+                    case '宁夏':
+                        city = 'yinchuan';
+                        cityText = '银川';
+                        break;
+                    case '新疆':
+                        city = 'wulumuqi';
+                        cityText = '乌鲁木齐';
+                        break;
+                    case '内蒙古':
+                        city = 'huhehaote';
+                        cityText = '呼和浩特';
+                        break;
+                }
+                return cityText;
+            }
+        }
+    };
+    let cdVideo = {
+        template: `
+            <video width="600" height="400" controls="controls">
+                <source src="./video/chengdu.mp4" type="video/mp4" />
+            </video>
+        `
+    };
+    let njVideo = {
+        template: `
+            <video width="600" height="400" controls="controls">
+                <source src="./video/nanjing.mp4" type="video/mp4" />
+            </video>
+        `
+    };
+    let cdgs = {
+        template: `
+            <div>
+                <p>聂先生 [群众]：</p>
+                <p style="text-indent: 2em">变化巨大，结束了战乱，统一了大陆，老百姓有了安居乐业的生活，有条件安心建设国家。工业农业，国防方面都改变了过去落后的面貌，国际上的帝国主义再也不敢轻视中国。老百姓生活摆脱了饥寒，正向着幸福美满的方向发展。近年来大力反腐惩贪，赢得了民心，受到了国人的拥戴，增强了人民群众对美好未来的信心。</p>
+                <p>谭女士 [党员]：</p>
+                <p style="text-indent: 2em">百年以来，在中国共产党的领导下，中国发生了以下变化：</p>
+                <p style="text-indent: 2em">1.带领各族人民建立新中国，人民当家做了主人；</p>
+                <p style="text-indent: 2em">2.物质生活得到了极大改善；</p>
+                <p style="text-indent: 2em">3.人民的精神面貌焕然一新，文化生活极大丰富。</p>
+                <p style="text-indent: 2em">4.祖国日益强大，在世界上的地位越来越高。</p>
+                <p style="text-indent: 2em">因为崇敬和热爱，更想成为一名优秀的共产党员，真正地为百姓解决一些问题，做一点力所能及的事情。入党后，加强了党性和政治理论学习，增强了对自我行为的约束，同时也是对自我心灵的升华。</p>
+                <p>聂先生 [群众]：</p>
+                <p style="text-indent: 2em">变化巨大，结束了战乱，统一了大陆，老百姓有了安居乐业的生活，有条件安心建设国家。工业农业，国防方面都改变了过去落后的面貌，国际上的帝国主义再也不敢轻视中国。老百姓生活摆脱了饥寒，正向着幸福美满的方向发展。近年来大力反腐惩贪，赢得了民心，受到了国人的拥戴，增强了人民群众对美好未来的信心。</p>
+                <p>万女士 [党员]：</p>
+                <p style="text-indent: 2em">有了中国共产党，中国人民的斗争展现出崭新的面貌，也是党团结带领中国人民完成社会主义革命，确立社会主义基本制度，消灭一切剥削制度，推进了社会主义建设。</p>
+                <p style="text-indent: 2em">最开始想入党为了向先进学习，想和其他党员同志一样优秀。以前没有很大的组织归属感，入党后有了归属感，在做事情上更多地有了对群众的考量。</p>
+                <p>吴同学 [共青团员]：</p>
+                <p style="text-indent: 2em">一百年前那个风雨如晦的时代，中国共产党应运而生，她注定的诞生仿佛一缕晨光，照进了黑暗的中华大地。一百年间，中国发生了翻天覆地的变化，中国从一个积贫积弱，饱受战争摧残的国家成长为了腾飞世界的东方巨龙。政治上，我们国家确定了系统科学的中国特色社会主义道路，并持续地展现着不竭的生命力；经济上，我国实行改革开放，四十年间全国人民艰苦奋斗，在2010年我国超越日本成为世界第二大经济体，人民生活水平得到了显著提升；文化上，我国领导人提出要坚定文化自信，建设社会主义文化强国，如今中华文化在世界各地生根开花，人们对中华文化的认同持续加深；军事上，我国拥有洲际弹道导弹、弹道导弹潜艇、战略轰炸机组成的三位一体的核打击能力，并拥有可配备核弹头的洲际弹道导弹。除了被视为拥有核武器的国家外，我国还被视为军事强国和潜在军事超级大国，一改百年前的落后状况，早已不惧怕任何威胁。</p>
+                <p>夏同学 [共青团员]：</p>
+                <p style="text-indent: 2em">1921年党一大在浙江嘉兴召开，标志着中国共产党的正式建立，也是历史的重要转折点。此后，经过28年浴血奋战，打败日本帝国主义，推翻国民党反动统治，建立了中华人民共和国，结束了半殖民地半封建社会的历史，带领中国人民真正的站起来了。</p>
+                <p style="text-indent: 2em">确立社会主义基本制度，在社会主义现代化建设的进程中，建立并不断完善工业体系和国民经济体系，加强军事、航空等投入，在探索中开创了中国特色社会主义。</p>
+                <p style="text-indent: 2em">中国共产党始终以人民的幸福为己任，关注民生，一百年来带领中国人民站起来，富起来，强起来，从一无所有到如今的国泰民安。</p>
+                <p>陆先生 [党员]：</p>
+                <p style="text-indent: 2em">不知不觉中国共产成立已经100周年了，回头看看，其实中国共产党这一路走来的路，辛苦的很。我们的中国共产党是从枪林弹雨中冲出来的，从南湖的红船开始，这一路都始终没有忘记要团结人民，这一路来，它也让中国从弱小的一个国家有了现在的辉煌！</p>
+                <p>孙女士 [党员]：</p>
+                <p style="text-indent: 2em">中国共产党把中国历史推向了新高度,也是共建美好世界的引领者。一百年来，中国共产党深刻地改变了中国人民和中华民族的前途和命运，国力腾飞，人民生活水平也显著提高。</p>
+                <p style="text-indent: 2em">因为只有党，才能够教育我们坚持共产主义道路，坚持一切从人民群众出发，掌握先进的社会、科技、文化本领，引导我们走向正确的发展道路、创造更快、更好、更先进的文明。入党后，我坚定了入党动机，为共产主义事业奋斗终生。</p>
+                <p>李同学 [入党积极分子]：</p>
+                <p style="text-indent: 2em">这一百年里发生了许多翻天覆地的改变，在我党的带领下，中华民族推翻了帝国主义、封建主义、官僚资本主义三座大山，建立了中华人民共和国。进入现代，我党带领全国各族人民完成了新民主主义革命，确立了社会主义基本制度，奠定了根本政治前提和制度基础。即便在改革的路上经历了困难，但也有春风吹又生的时候，我党再次进行改革开放新的伟大革命，极大地解放和发展了社会生产力，人民生活得到显著改善，综合国力显著增强，国际地位显著提高。再到现在，我国国内生产总值跃居世界第二，实现了从温饱不足到总体小康再向全面小康迈进的历史性跨越，这都是我们有目共睹的。</p>
+                <p>范先生 [党员]：</p>
+                <p style="text-indent: 2em">中国五千年来一直在一种封建统治下，中国共产党一步步地让人民成为了当家作主的主人。经过了改革开放的三四十年，对中国人民的经济和生活都带来了巨大的转变，让中国重新屹立于世界之林。</p>
+                <p style="text-indent: 2em">因为中国共产党代表着中国先进的团队，中国共产党的建立让全中国人民走上了富裕的道路，让中国人民做到了“当自己的主人”。思想上从小受家庭的熏陶和社会上的培养，一步步地认识到党的先进性，觉得自己应该向这个团体去进步，走近它，融入它，成为它的一部分。</p>
+                <p>黄先生 [党员]：</p>
+                <p style="text-indent: 2em">从中国的历史来说，我们在以前，曾经是世界政治文化的中心。只是近代，清朝末年的八国联军开始，受到了外国一些势力的入侵，因为当时我们的思想固步自封，确实是落后了。中国共产党领导我们全国人民团结在一起，抵抗了外族的入侵，把我们从一个弱小的吃不饱穿不暖的民族重新改变了，现在在习主席的带领下，变得越来越好，直指世界最高峰，站在了经济前列，我相信我们中华人民共和国在中国共产党的领导下会走到世界的最前列。</p>
+                <p style="text-indent: 2em">党是我们国家唯一的执政党，也是思想性进步的象征与代表。而且作为一个人来说，思想上应该有一些信仰，共产党的一些宗旨就是我们现在的信仰。加入党组织以后，我们公司里面有一个支部，每隔一段时间会开展一些活动，进行一些讨论。在思想上跟以前有了一些很不一样的变化，对自己的工作，对自己的生活甚至于至家庭的观念都有了一些改变，不像以前那样什么事情都似是而非，现在有了一些比较坚定的目标。做起事来更有坚持和动力。</p>
+                <p>李先生 [群众]：</p>
+                <p style="text-indent: 2em">给中国带来的改变就是所有的中国人民生活得到了极大的改善，社会的公平性也得到了极大地提高。</p>
+                <p>陶先生 [党员]：</p>
+                <p style="text-indent: 2em">中国共产党领导全国人民推翻了万恶的旧社会，建立了新中国。在中国共产党的领导下，进行了改革开放，使中国人民过上了幸福的生活。</p>
+                <p style="text-indent: 2em">中国共产党是全国人民的先锋队，是领导全国人民、全中国伟大复兴的最先进的政党</p>
+                <p>周同学 [共青团员]：</p>
+                <p style="text-indent: 2em">我觉得我们青年始终是党事业薪火相传重要力量，我们作为新时期新时代的新青年，我们更应该积极参加党的活动。在党的革命建设和改革的伟大事业当中起到生力军和突击队的作用</p>
+                <p>江同学 [共青团员]：</p>
+                <p style="text-indent: 2em">建党一百周年是为国家利益及人民的自由平等繁荣幸福奋斗的历史。党是永远值得每一个人热爱及拥护的。希望未来的日子里国家能在党的继续带领引导下继续前行不断发展，我将积极的向党组织靠拢！</p>
+                <p>杨同学 [共青团员]：</p>
+                <p style="text-indent: 2em">没有中国共产党的正确领导，就没有现在如此繁荣昌盛的中国。出生在新中国的我们，没有办法体验到革命先辈的奋勇豪迈，但我们可以学习先辈们的伟大精神，学习党的相关知识，积极向党组织靠拢，为祖国的建设添砖加瓦。在这里祝愿我们伟大的祖国在未来更加强大！</p>
+                <p>孙同学 [共青团员]：</p>
+                <p style="text-indent: 2em">中国共产党领导下的中国发生了巨大变化：</p>
+                <p style="text-indent: 2em">1、建立了高度统一、完全独立自主的新中国</p>
+                <p style="text-indent: 2em">2、为中国找到了一条契合本国国情的发展道路</p>
+                <p style="text-indent: 2em">3、将公平公正的理念深度嵌入到中国社会的建构中</p>
+                <p>刘同学 [共青团员]：</p>
+                <p style="text-indent: 2em">中国共产党自成立以来，走过了波澜壮阔的近百年，从无到有、从弱到强，经历了太多的苦难，收获了一个又一个的喜悦，走向了一个又一个的胜利。革命战争年代，一批又一批的共产党人前赴后继，奋战在血雨腥风的沙场，他们只有一个信念，让千千万万的劳苦大众翻身得解放；和平建设时期，无数的共产党人公而忘私、鞠躬尽瘁，先天下之忧而忧、后天下之乐而乐，他们就是要让人民群众生活得更美好。</p>
+                <p>吕同学 [共青团员]：</p>
+                <p style="text-indent: 2em">时间如流水般飞快地从我们眼前流逝回想起以前，我们的党走过了100年艰苦奋斗的道路，我为自己的党感到骄傲和自豪！</p>
+                <p style="text-indent: 2em">中国共产党从1921年成立到主义道路，为实现中华民族伟大复兴指明了方向。不知多少年前，作为中国革命的一个转折点，漫漫长征让中国共产党人找到了马克思主义与中国革命实际相结合的道路。建党与长征——中国革命历的两件大事穿越历史的时空，启迪着我们，昭示着未来。</p>
+                <p style="text-indent: 2em">100年的种种变化让我感慨多少，而自己经历的只是千千万万国人生活中的一个小小缩影。没有共产党就没有新中国!</p>
+                <p>王同学 [共青团员]：</p>
+                <p style="text-indent: 2em">今年是中国共产党建党一百周年，在党的正确领导下，人民的生活日益幸福美满，更是在今年消灭了贫困，带领人民走向美好的生活。衷心的祝福党生日快乐，带领中国人民走向更好的未来！加油！</p>
+                <p>于同学 [共青团员]：</p>
+                <p style="text-indent: 2em">值2020年全面小康目标达成之年，脱贫攻坚战已经收关，关注时政的人或许已经注意到，最近召开的十九届五中全会上，第一提及“实现巩固拓展脱贫攻坚成果同乡村振兴有效衔接”，预示着农村全面脱贫的到来，而“四个全面”战略布局中的“全面建成小康社会”也替换为“全面建设社会主义现代化国家”， 我国实现中华民族伟大复兴的道路又更进一步，我们面前展开的是一片宏伟蓝图。身为国人，我感到自豪，也将继续奋斗，朝着党员的目标前进，希望未来能为党为国家贡献力量，为实现中华民族的伟大复兴而奋斗。</p>
+            </div>
+        `
+    };
+    let njgs = {
+        template: `
+            <div>
+                <p>刘先生 [党员]：</p>
+                <p style="text-indent: 2em">一百年来，在中国共产党的领导下，百姓生活安定幸福，尤其是带领百姓脱贫，收入逐步达到小康水平。</p>
+                <p>徐同学 [共青团员]：</p>
+                <p style="text-indent: 2em">
+中国共产党为中国带来了翻天覆地的变化，自从俄国十月革命以来，以陈独秀，李大钊，毛泽东等为首的共产党员为共产主义事业抛头颅，大热血。在抗战时期，深入敌后，建立敌后根据地，与凶恶的敌人斗智斗勇打游击战为中华民族解放做出巨大牺牲。新中国成立后，中国共产党带领人民群众不卑不亢，不向帝国主义低头，同时加班加点地实现中华民族的复兴伟业。马列毛邓三，科学发展观，以及习近平新时代中国特色社会理论将会带领中国人民走向复兴。但也绝不会像某些国家一样搞单边主义，搞霸权。在中国共产党的领导下。中国必会走向复兴，世界必会更加和平与繁荣                </p>
+                <p>陆同学 [共青团员]：</p>
+                <p style="text-indent: 2em">
+                为百姓解决一些问题，做一点力所能及的事情。入党后，加强了党性和政治理论学习，增强了对自我行为的约束，同时也是对自我心灵的升华。</p>
+                <p>王同学 [共青团员]：</p>
+                <p style="text-indent: 2em">
+一百年来，中国共产党领导下的中国，科技进步、脱贫致富、全面小康。</p>
+<p>万老师 [中国民主促进会]：</p>
+                <p style="text-indent: 2em">
+第一，没有共产党就没有新中国。中国共产党建立了高度统一、完全独立自主的新中国，成为我们这个国家当下和今后释放种种优势的基础。</p>                <p>吴同学 [共青团员]：</p>
+                <p style="text-indent: 2em">
+第二，共产党为中国找到了一条契合本国国情的发展道路，一举改变了中国积贫积弱的颓势，重塑了中国民生的面貌。</p>
+<p style="text-indent: 2em">
+第三，共产党将公平正义的理念深度嵌入到中国社会的建构中，公平公正成为中国全社会最强大、持久的公共理念。</p>
+<p style="text-indent: 2em">
+第四，共产党推动形成了一个中国发展好的趋势。国家的前景令人振奋，整整一个世纪，中国的国运不仅彻底扭转，而且呈现出欣欣向荣的趋势。</p>
+              <p>曹同学 [共青团员]：</p>
+                <p style="text-indent: 2em">
+带给人民的变化是明显的,家园美好,国家稳固,从战乱中解放国家,人民生活安定，新中国发展迅速，日新月异，都是党努力的结果</p>
+<p>曹同学 [共青团员]：</p>
+                <p style="text-indent: 2em">
+近一百年来，中国共产党极大地改变了中国、影响着世界。中国共产党改变了中国命运，推翻了三座大山，确立了社会主义制度，创造两大奇迹，创建人民军队，可谓是给中国带来了天翻地覆的改变。</p>
+                <p>鞠同学 [共青团员]：</p>
+                <p style="text-indent: 2em">
+中国共产党成立100年来，领导中国人民走过了波澜壮阔而又艰难曲折的奋斗历程，取得了举世瞩目的辉煌业绩，使中国发生了沧桑巨变，对世界产生了重大影响。中国共产党领导中国人民不断进取，向中华民族的伟大复兴不断奋进。在中国共产党的领导下，中国多方面多领域共同发展，不断强化在国际上的话语权。经过多年建设和发展，人民收入大幅增长，健康水平和文明素质明显提高，生活显著改善。</p>
+                <p>钱先生 [党员]：</p>
+                <p style="text-indent: 2em">
+中国共产党给中国带来了翻天覆地的变化。首先是民族的独立自主，然后是民族的繁荣富强，在它的带领下，中国面貌焕然一新了。中国共产党伟大、正确、光荣，它带领我们中华民族走上了独立自主、繁荣富强的正确道路，从推翻三座大山、新民主主义革命起，它打倒了剥削阶级，建立了新中国，进行了社会主义建设，使中国各方面焕然一新，实现了国家的繁荣富强。作为党员，始终以共产党员的要求来作为自己的行动指南，做到思想上入党，行动上入党，以党章为自己的行动指南。 </p>
+                <p>钱女士 [党员]：</p>
+                <p style="text-indent: 2em">
+没有共产党就没有新中国，它带来了马克思主义，挽救了危亡的中华民族，为中国指出了一条崭新的道路。坚信只有党的领导才能使国家走上繁荣富强的道路。作为党员，变得更加积极上进了，有了明确的政治方向，全心全意为人民服务，尽心竭力为群众解决难题。</p>
+<p>郑同学 [共青团员]：</p>
+                <p style="text-indent: 2em">
+一百年来，中国共产党给中国带来的变化有：</p>
+                <p style="text-indent: 2em">
+1.政治生活。带领各族人民建立新中国，人民当家做了主人</p>
+                <p style="text-indent: 2em">
+2.物质生活。人民从饥肠辘辘到整体小康。</p>
+                <p style="text-indent: 2em">
+3.精神文化生活。人民的精神面貌焕然一新，文化生活极大丰富</p>
+                <p>刘同学 [共青团员]：</p>
+                <p style="text-indent: 2em">
+共产党建立了高度统一、完全独立自主的新中国，它成为我们这个国家当下和今后释放种种优势的基础。共产党为中国找到了一条契合本国国情的发展道路，它在上世纪末和本世纪尤其大放异彩，一举改变了中国积贫积弱的颓势，重塑了中国民生的面貌，并使中国成为一个发展后劲绵延不绝的国家。共产党将公平正义的理念深度嵌入到中国社会的建构中。共产党推动形成了一个中国发展好的趋势。</p>                <p style="text-indent: 2em">党是我们国家唯一的执政党，也是思想性进步的象征与代表。而且作为一个人来说，思想上应该有一些信仰，共产党的一些宗旨就是我们现在的信仰。加入党组织以后，我们公司里面有一个支部，每隔一段时间会开展一些活动，进行一些讨论。在思想上跟以前有了一些很不一样的变化，对自己的工作，对自己的生活甚至于至家庭的观念都有了一些改变，不像以前那样什么事情都似是而非，现在有了一些比较坚定的目标。做起事来更有坚持和动力。</p>
+                <p>姚同学 [共青团员]：</p>
+                <p style="text-indent: 2em">
+中国共产党为中国人民争取到了权益，为中国的发展指引了清晰明确的目标，使中国的国际地位得到了极大的提升。</p>
+<p>李同学 [共青团员]：</p>
+                <p style="text-indent: 2em">
+自1921年7月23日中国共产党成立以来，中国革命的面貌便焕然一新了。本着为人民服务的初心，中国共产党带领中华民族战胜了一切困难与敌人，实现了中国人民站起来、富起来到强起来的转变。立足经济发展，维持良好治安，在党的带领下，人民的腰包不断充实，人民的幸福感也在不断上升。</p>
+               <p>高同学 [共青团员]：</p>
+                <p style="text-indent: 2em">
+
+中国共产党恢复了祖国和平，百年巨大发展，中国进入了新时代。</p>
+<p>黄女士 [党员]：</p>
+                <p style="text-indent: 2em">
+中国共产党一经成立，中国革命就展现了新的面貌。
+加入中国共产党，是对自我行为的“约束”，更是对自我心灵的升华。面对自己的不足，以一名党员的要求在严格要求自己，在教师岗位上努力工作，为学校发展作贡献。
+</p>
+                <p>韩同学 [共青团员]：</p>
+                <p style="text-indent: 2em">
+我们的祖国从分裂走向统一，战争走向和平，从一贫如洗到如今的全面小康，都是我们党的功劳，我能处在这样一个和平安定富足的环境中学习成长，都要感谢我们的祖国，我们的党。</p>
+            </div>
+        `
+    };
+    let cdzf = {
+        template: `
+            <div>
+                <p style="text-indent: 2em">祝福中共在过去的年代里领导中国人民取得了巨大的成就，只要不腐败，不脱离群众，和人民群众心连心，就能够永远保持执政党的地位，祝福中共在这方面越做越好，老百姓对中共的信心不断增强。</p>
+                <p style="text-align: right;">——聂先生</p>
+                <p style="text-indent: 2em">
+感谢党的领导，祝福中国共产党越来越好，祝福祖国昌盛繁荣！</p>
+                <p style="text-align: right;">——谭女士</p>
+                <p style="text-indent: 2em">
+感谢中国共产党，有了党组织的带领，我们才会越来越好！
+我们会缅怀过去，牢记先辈沉甸甸的嘱托;我们会面向未来，为党下写新的一页
+</p>
+
+              <p style="text-align: right;">——万女士</p>
+                <p style="text-indent: 2em">
+中国共产党经过一百年的考验和磨砺，在曲折中前进，为中国人民带来了幸福，为中华民族的伟大复兴带来了强劲的动力。在党的百年华诞之际，我衷心地祝愿党能够坚持现有的正确道路，能不断地接纳新认识，发展新观念，在未来领导人民建设一个更富强的中国！</p>
+              <p style="text-align: right;">——吴同学</p>
+                <p style="text-indent: 2em">
+愿中国共产党在下一个一百年，不忘初心，砥砺前行，谱写出新的篇章，创造出更大的辉煌，实现中华民族的伟大复兴。</p>
+                <p style="text-align: right;">——夏同学</p>
+                <p style="text-indent: 2em">
+祝愿中国共产党英勇不屈，愈加富强！也祝福中国越来越强大！</p>
+                <p style="text-align: right;">——陆先生</p>
+                <p style="text-indent: 2em">
+中国共产党不仅深刻改变了中国人民和中华民族的前途和命运，而且深刻改变了世界发展的趋势和格局，为人类文明进步做出了巨大贡献。作为一名老党员，我希望我们的国家越来越好，党的执政水平也越来越高。
+一百年来中国共产党筚路蓝缕，取得成就无数，祝愿接下来的一百年里，我党能够再创佳绩、续写辉煌！
+</p>
+                <p style="text-align: right;">——孙女士</p>
+                <p style="text-indent: 2em">
+民族复兴和国家的繁荣离不开我们个人，希望将来能够成为中国共产党的一份子，为国家献出自己的一份力量。
+党建一百年，据我所知也是十四五的开局之年，祝愿我党接下来在历史舞台上将继续留下浓墨重彩的标注，朝着第二个一百年的胜利前进！
+</p>
+                <p style="text-align: right;">——李同学</p>
+                <p style="text-indent: 2em">
+我们要坚定理想，踏实工作，永远做党的好儿女，把党建设为我们全人类最好的一个党
+我们会缅怀过去，牢记先辈们沉甸甸的嘱托；我们会面向未来，为党续写新的篇章，祝党生日快乐！
+</p>
+                <p style="text-align: right;">——范先生</p>
+                <p style="text-indent: 2em">
+首先祝我们党的百年生日快乐，我相信这只是第一个一百年，我们还会看到后续的第二个，第三个乃至更多的一百年！</p>
+                <p style="text-align: right;">——黄先生</p>
+                <p style="text-indent: 2em">
+希望我们的国家和人民与中国共产党结合地更加紧密，国家更加繁荣昌盛</p>
+                <p style="text-align: right;">——李先生</p>
+                <p style="text-indent: 2em">
+祝愿我们伟大的党永远年轻永远健康！</p>
+                <p style="text-align: right;">——陶先生</p>
+                 <p style="text-indent: 2em">
+国家能够长治久安，中国共产党能带领我们中国能够成为世界强国。</p>
+                <p style="text-align: right;">——周同学</p>
+                 <p style="text-indent: 2em">
+希望中国长治久安，越来越好！</p>
+                <p style="text-align: right;">——付同学</p>
+                 <p style="text-indent: 2em">
+没有共产党就没有新中国，我永远感觉党为我们创造的和平幸福的生活环境，也希望加强党内管理，严惩懒政怠政，希望党可以走得更远，走得更好。
+祝我们党生日快乐，祝党永远健康，永远向前！
+</p>
+                <p style="text-align: right;">——孙同学</p>
+            </div>
+        `
+    };
+    let njzf = {
+        template: `
+            <div>
+                <p style="text-indent: 2em">
+希望中国共产党在第二个一百年带领全体人民创新发展，再创辉煌。保持国家安定团结，国家统一，让百姓生活幸福健康</p>
+                <p style="text-align: right;">——刘同学</p>
+                <p style="text-indent: 2em">
+百年政权，继往开来。
+不忘初心，砥砺前行。
+国泰民安，人心所向。
+上下一心，共创辉煌。
+</p>
+                <p style="text-align: right;">——徐同学</p>
+                <p style="text-indent: 2em">
+没有共产党，就没有新中国。谢谢你，党，是你给我们带来了幸福美满的生活。祝愿中国共产党英勇不屈，愈加富强！
+希望党的下一百年可以越来越好！
+
+</p>
+
+              <p style="text-align: right;">——王同学</p>
+                <p style="text-indent: 2em">
+不忘初心，牢记使命。一百年风雨兼程，一百年奋斗不息，在中国共产党的坚强领导下，中国发生了翻天覆地的变化，亿万人民书写了国家和民族发展的壮丽史诗，中国特色社会主义进入了新时代。我们要珍惜来之不易的幸福生活，也要努力为社会主义建设添砖加瓦。</p>
+              <p style="text-align: right;">——万先生</p>
+                <p style="text-indent: 2em">
+我们相信：在党的英明领导下，中华民族伟大复兴的梦想一定会实现!在党的路线、方针指引下，我们构建和谐社会的蓝图一定会实现!永远跟党走，无悔无怨!
+一百九载艰苦奋斗，国强民富华夏安;一百九载拼搏进取，民族复兴舞翩跹。普天同庆，举世共贺，建党一百周年，祝愿党好国泰民长安!
+</p>
+                <p style="text-align: right;">——曹同学</p>
+                <p style="text-indent: 2em">
+生在当下这个新时代，我们是幸福的，同时也是任重道远的。以历史长河为证，没有共产党就没有新中国，从1921年中国共产党的诞生到2021年建党一百周年，中国共产党给中国带来了翻天地覆的改变。我很骄傲，我在我党的照耀下成长；我很骄傲，我是中国人！
+愿我们的祖国前程辉煌灿烂，愿我们的党带领我们勇往直前，愿我们的未来和祖国的明天同样精彩。
+</p>
+                <p style="text-align: right;">——曹同学</p>
+                <p style="text-indent: 2em">
+感谢中国共产党，希望中共越来越好！
+</p>
+                <p style="text-align: right;">——黄同学</p>
+                <p style="text-indent: 2em">
+没有共产党就没有新中国，党领导着我们，才能迈向美好的未来。百年政党风帆强劲，千秋伟业再起辉煌。走过漫长的百年历史长河，我们的党坚定信仰，不忘初心，砥砺前行，从成立之日起就把“人民”二字镌刻在自己的旗帜上。无论是过去、现在，还是未来，只要党旗飘扬在哪里、哪里就是人民的希望，永远跟党走，已经成为全中国人民的共同信念和坚定追求。伟大复兴，伟大中国梦，致敬历史，同沐荣光。
+百年是一个节点，也是一个新的起点。100岁的党正值青春年少，未来也定是一片光明。
+
+</p>
+                <p style="text-align: right;">——鞠同学</p>
+                <p style="text-indent: 2em">
+祝愿党带领中华民族取得更大的成就，带领中国在社会主义建设中乘风破浪，早日实现中国梦
+</p>
+                <p style="text-align: right;">——钱先生</p>
+                <p style="text-indent: 2em">
+春雷一声红旗展,照亮地,照亮天。建党一百周年,祝福送给我们亲爱的党。祝党生日快乐,愿党以后的每一天都顺利、平安。</p>
+                <p style="text-align: right;">——钱女士</p>
+                <p style="text-indent: 2em">
+在以习近平同志为核心的党中央坚强领导下，在习近平新时代中国特色社会主义思想的科学指引下，无论什么样的暗礁险滩，无论多么大的惊涛骇浪，都阻挡不了中国共产党领航中国、破浪前行的决心和步伐！
+    祝愿中国共产党英勇不屈，愈加富强！祝福我们的祖国繁荣倡盛，使我们伟大的祖国讫立于世界的东方！ 在党的90华诞之际，愿我们的党青春永驻，愿我们的祖国繁荣昌盛。 祝愿我们的祖国越来越强盛。我们的中国共产党越来越受人民爱戴。祖国万岁，中国共产党万岁！
+</p>
+                <p style="text-align: right;">——郑同学</p>
+                <p style="text-indent: 2em">
+党旗迎空飘，党徽胸中耀，党的生日已来到！党的生日全国闹，富强快乐伴人民，愿中国共产党万岁，愿中国人民快乐安康！
+祝共产党的发展更加顺风顺水，祝中共建党一百周年快乐！
+</p>
+                <p style="text-align: right;">——刘同学</p>
+                 <p style="text-indent: 2em">
+把最忠诚的祝愿献给党，脚踏实地在平凡的工作岗位上，创造出不平凡的业绩，践行十八大，共筑中国梦、娇子梦与川渝共成长。
+腾飞理想苦建党，五四思潮新主张;掀翻三山志气长，改革开放奔小康;沥血沤心民给力，华夏春秋数今朝;运筹帷幄迎风浪，与世竞舞耀镰刀。
+</p>
+                <p style="text-align: right;">——姚同学</p>
+                 <p style="text-indent: 2em">
+愿中国共产党不忘初心，牢记使命，让党和国家的未来更加美好。</p>
+                <p style="text-align: right;">——李同学</p>
+                 <p style="text-indent: 2em">
+希望在接下来中国发展的道路上，可以一直做正确抉择，一直引领今后中国发展
+    愿我党一路顺遂！
+
+</p>
+                <p style="text-align: right;">——高同学</p>
+                <p style="text-indent: 2em">
+千里之行，始于足下；千里之堤，溃于蚁穴。希望我们的党能够继续严厉惩治腐败分子，纯洁党员的队伍。
+    党的光辉，铭记在心，党的形象，当作榜样，党的风采，照亮未来，党的情怀，大放光彩，愿我们的党更加壮大。
+
+</p>
+                <p style="text-align: right;">——黄女士</p>
+                <p style="text-indent: 2em">
+共产党，辛苦了，感谢有你，能让我生活在如此昌盛的祖国，我爱你，中国！
+    希望我们的党更加繁荣昌盛，继续领导我们祖国越来越富强。
+</p>
+                <p style="text-align: right;">——韩同学</p>
+            </div>
+        `
+    };
+    let cdjs = {
+        template: `
+            <div>
+                <p style="text-indent: 2em;">成都，别称蓉城、锦城，是四川省省会、特大城市，同时是全国十大古都和首批国家历史文化名城，中国最佳旅游城市，古蜀文明的发祥地。周太王以“一年成聚，二年成邑，三年成都”，故名成都，境内的金沙遗址有3000年历史。成都在历史上一直是各朝代的州郡治所，蜀汉、成汉、前蜀、后蜀等政权先后在此建都。</p>
+                <p style="text-indent: 2em;">上一个世纪，成都经历了战乱与危机，但从未丧失活力。解放后，成都人民在党的领导下积极建设，为成都奠定了稳定的发展基石。今天的成都已经是是西部地区重要的中心城市、商贸物流中心和综合交通枢纽，幅员面积14335平方公里，常住人口1658.10万人，仅次于北上渝，居中国第4位，并且多次被评为中国最具活力休闲城市、中国最具幸福感城市。与此同时，成都是西部大开发以来，中国发展最快的城市，GDP总量从2008年的全国第十四位增长到第七位，达17716.7亿元。</p>
+                <p style="text-indent: 2em;">建党百年以来，成都在经济，文化教育，交通，科技等方面都有了翻天覆地的变化。以公共卫生和社会保障为例，且看百年前的成都，人民还在受着鸦片的荼毒，根据1916年的四川人口普查，只有14.3%的男性和13.4%的女性超过55岁；伤寒、麻疹、猩红热、痢疾、霍乱等疾病更是疯狂肆虐，残害人们的健康；大量民众流离失所，穷人可能睡在河岸边或者寺庙檐下，即使冬天也是如此。而在今天，成都共有卫生机构12121个，其中医院、卫生院909个，疾病预防控制中心24个。全市参加城镇职工基本养老保险人数887.4万人，参加城镇职工基本医疗保险人数923.6万人。全年2.3万城镇居民、8.1万农村居民得到政府最低生活保障，有各类社会福利机构239个，拥有床位3.9万张；有社区养老设施2248个，拥有床位3.5万张；有各种社区服务设施7199处，社区服务中心261个。</p>
+
+            </div>
+        `
+    };
+    let njjs = {
+        template: `
+            <div>
+            <p style="text-indent: 2em;">扬子江边，紫金山下石头城书写千年悠悠华夏文明史。</p>
+                <p style="text-indent: 2em;">南京，中国四大古都、中华文明的重要发祥地，历史上曾数次庇佑华夏之正朔，长期是中国南方的政治、经济、文化中心。</p>
+                <p style="text-indent: 2em;">紫金山南麓的中山陵，是伟大民主革命先行者孙中山先生的陵寝。1912年元旦，孙中山在南京建立亚洲第一个共和国。25年之后遭侵华日军屠城，30余万国人用生命记录中华民族史上最黑暗的一页。直到1949年4月23日，当人民解放军百万雄师横渡大江，南京解放，这座城市在近现代史上屡败屡战、屡战屡败的轮回终告结束。</p>
+                <p style="text-indent: 2em;">解放初期，南京城区面积只有40平方公里，而今已达770多平方公里。截至2018年底，南京市常住人口已达843万。</p>
+                <p style="text-indent: 2em;">百年求索，终得正道。</p>
+                <p style="text-indent: 2em;">始建于1908年的中车南京浦镇车辆有限公司，如今已“111岁”。“这里是中国现代机车车辆工业从屈辱、抗争到振兴、发展、强大的见证。”公司原党委宣传部长季明华说，南京解放结束了国民党反动派和封建把头对工人的剥削和压迫，劳动人民从此成了工厂的主人。从1958年起，工厂修造并举，我国第一辆铁路客车——YZ21型硬座车从这里驶出，填补了国内铁路客车车厢制造的空白。</p>
+                <p style="text-indent: 2em;">从市容破败、物价飞涨、民生凋敝、百废待兴的国民政府首都，到如今的现代化国际性城市；从经济体制改革到全面深化改革、从跨越温饱底线到高水平全面小康；用约占全国0.07%的土地、0.6%的人口，创造了全国1.4%的经济总量、2%的税收；</p>
+<p style="text-indent: 2em;">2016年，成为GDP过万亿元的城市；</p>
+<p style="text-indent: 2em;">2018年，经济竞争力位列中国城市前10强；</p>
+<p style="text-indent: 2em;">连续10年获评“中国最具幸福感城市”……</p>
+<p style="text-indent: 2em;">与民共建，更要与民共享。宏观的数字变化连接着微观的民生获得感，GDP优势直接转变为一项项暖民心、安民心、聚民心的切实举措。</p>
+<p style="text-indent: 2em;">虎踞龙盘，山水相依</p>
+<p style="text-indent: 2em;">一座城市走过百年，南京一直在不断发展成长。</p>
+<p style="text-indent: 2em;">又一个百年开启了，南京会在中国共产党的领导与关怀下，继续奋进！</p>
+</div>
+        `
+    }
+    let success = {
+        template: '<div class="noDone container">评论成功!</div>'
+    }
+    let city = {
+        template: `
+            <div v-if="handleCity" class="container">
+                 <div class="article-zone">
+                   <div class="title-zone">{{city}}百年变化介绍</div>
+                   <div class="content-zone">
+                     <cdjs v-if="city === '成都'"/>
+                     <njjs v-if="city === '南京'"/>
+                   </div>
+                 </div>
+                 <div class="operation">
+                   <button @click="showVideo" :class="isActive ? 'active': '' ">党员采访视频</button>
+                   <button @click="showArticle1" :class="isActive1 ? 'active': '' ">建党百年感受</button>
+                   <button @click="showArticle2" :class="isActive2 ? 'active': '' ">建党百年祝福</button>
+                 </div>
+                 <div class="content" v-show="isShowArticle">
+                   <cdgs v-if="city === '成都'"/>
+                   <njgs v-if="city === '南京'"/>
+                 </div>
+                 <div class="content" v-show="isShowArticle1">
+                   <cdzf v-if="city === '成都'"/>
+                   <njzf v-if="city === '南京'"/>
+                   <div class="comment">
+                     <textarea placeholder="评论一下吧"></textarea>
+                     <router-link to="/success"><button class="submit">发送</button></router-link>
+                   </div>
+                 </div>
+                 <div class="content video" v-show="isShowVideo">
+                   <cd-video v-if="city === '成都' "/>
+                   <nj-video v-if="city === '南京' "/>
+                 </div>
+
+            </div>
+            <div v-else class="noDone container">
+              正在制作中...
+            </div>
+        `,
+        components: {
+            cdVideo,
+            njVideo,
+            cdgs,
+            njgs,
+            cdzf,
+            njzf,
+            cdjs,
+            njjs
+        },
+        data() {
+            return {
+                isShowVideo: false,
+                isShowArticle: false,
+                isShowArticle1: false,
+                isActive: false,
+                isActive1: false,
+                isActive2: false,
+                city: '',
+                article: ''
+            }
+        },
+        created(){
+            const name = this.$route.params.name;
+            this.city = name;
+        },
+        computed: {
+            // 判断是否是成都或者南京
+            handleCity(){
+                return (this.city === '成都') || (this.city === '南京');
+            }
+        },
+        methods: {
+            showArticle1(){
+                this.isShowVideo = false;
+                this.isShowArticle = true;
+                this.isShowArticle1 = false;
+                this.isActive = false;
+                this.isActive2 = false;
+                this.isActive1 = true;
+            },
+            showArticle2(){
+                this.isShowVideo = false;
+                this.isShowArticle = false;
+                this.isShowArticle1 = true;
+                this.isActive1 = false;
+                this.isActive = false;
+                this.isActive2 = true;
+            },
+            showVideo(){
+                this.isShowVideo = true;
+                this.isShowArticle = false;
+                this.isShowArticle1 = false;
+                this.isActive1 = false;
+                this.isActive2 = false;
+                this.isActive = true;
+            }
+        }
+    };
+    let index = {
+        template: `
+             <div>
+                 <div id="map" style="height: 550px"></div>
+             </div>
+        `,
+        data() {
+            return {
+                isShowVideo: false,
+                content: '',
+                isActive: false,
+                isActive1: false
+            }
+        },
+        mounted() {
+            let myChart = echarts.init(document.getElementById('map'));
+            let option = {
+                title: {
+                    text: '中华百载日新图',
+                    x:'center',
+                    top: '20'
+                },
+                tooltip : {
+                    trigger: 'item',
+                    formatter: '{b}',
+                    backgroundColor: 'rgba(255,255,255,0.5)',
+                    borderColor: '#000000',
+                    textStyle: {
+                        color: '#000000'
+                    }
+                },
+                series: [{
+                    type: 'map',
+                    map: 'china',
+                    itemStyle: {
+                        areaColor: 'rgba(205,1,4,1)',
+                        borderColor: 'rgba(239,162,74,1)'
+                    },
+                    emphasis: {
+                        itemStyle: {
+                        },
+                        label: {
+                            color: '#000000'
+                        }
+                    },
+                    label: {
+                        show: true,  //展示省份名称
+                        textStyle: {
+                            color: '#ffffff'
+                        }
+                    }
+                }]
+            };
+            myChart.on('click', (event) => {
+                router.push({ name: 'province', params: { name: `${event.name}` }})
+            });
+            myChart.setOption(option);
+        },
+        methods: {
+            showArticle(){
+                this.isShowVideo = false;
+                this.isActive1 = false;
+                this.isActive = true;
+                let content1 = '这是中国百年历史文字介绍';
+                this.content = content1;
+            },
+            showVideo(){
+                this.isShowVideo = true;
+                this.isActive = false;
+                this.isActive1 = true;
+            }
+        }
+    }
+    let router = new VueRouter({
+        routes: [
+            {
+                path: '/',
+                redirect: '/index'
+            },
+            {
+                path: '/index',
+                component: index
+            },
+            {
+                path: '/success',
+                component: success
+            },
+            {
+                path: '/province/:name',
+                name: 'province',
+                component: province
+            },
+            {
+                path: '/city/:name',
+                name: 'city',
+                component: city
+            }
+        ]
+    })
+    const app = new Vue({
+        el: '#app',
+        data: {},
+        mounted(){},
+        methods: {},
+        router
+    });
+</script>
+</body>
+</html>
